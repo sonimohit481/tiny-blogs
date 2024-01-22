@@ -1,7 +1,7 @@
 function App() {
   return (
     <>
-      <h1>React with appwrite</h1>
+      <h1>{import.meta.env.VITE_APPWRITE_URL}</h1>
     </>
   );
 }
