@@ -11,6 +11,7 @@ import PostCard from "./PostCard";
 import AuthLayout from "./AuthLayout";
 import Login from "./Login";
 import Signup from "./Signup";
+import PostForm from "./postform/PostForm";
 
 export {
   Container,
@@ -26,4 +27,5 @@ export {
   AuthLayout,
   Login,
   Signup,
+  PostForm,
 };
