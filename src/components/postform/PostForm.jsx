@@ -20,6 +20,7 @@ export default function PostForm({ post }) {
   const userData = useSelector((state) => state.auth.userData);
 
   const submit = async (data) => {
+    console.log("loading start");
     if (post) {
       const file = data.image[0]
         ? await appwriteService.uploadFile(data.image[0])
@@ -38,21 +39,27 @@ export default function PostForm({ post }) {
         navigate(`/post/${dbPost.$id}`);
       }
     } else {
+      console.log("🚀 ~ Pic upload start:");
       const file = await appwriteService.uploadFile(data.image[0]);
-
+      console.log("pic upload end");
       if (file) {
         const fileId = file.$id;
         data.featuredImage = fileId;
+        console.log("blog upload start");
         const dbPost = await appwriteService.createPost({
           ...data,
           userId: userData.$id,
         });
+
+        console.log("blog upload end");
+        console.log("🚀 ~ submit ~ dbPost:", dbPost);
 
         if (dbPost) {
           navigate(`/post/${dbPost.$id}`);
         }
       }
     }
+    console.log("loading end");
   };
 
   const slugTransform = useCallback((value) => {
