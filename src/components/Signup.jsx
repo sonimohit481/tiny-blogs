@@ -13,10 +13,16 @@ const Signup = () => {
   const { register, handleSubmit } = useForm();
 
   const create = async (data) => {
+    const { name, email, password } = data;
     setError("");
     try {
-      const userData = await authService.createAccount(data);
+      const userData = await authService.createAccount({
+        email,
+        password,
+        name,
+      });
       if (userData) {
+        console.log("first");
         const userData = await authService.getCurrentUser();
         if (userData) dispatch(login(userData));
         navigate("/");

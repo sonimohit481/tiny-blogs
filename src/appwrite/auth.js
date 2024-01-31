@@ -27,18 +27,22 @@ export class AuthService {
       );
 
       if (userAccount) {
+        console.log(
+          "🚀 ~ AuthService ~ createAccount ~ userAccount:",
+          userAccount
+        );
         return await this.login({ email, password });
       } else {
         throw new Error("Failed to create user account");
       }
     } catch (error) {
-      throw new Error(`Failed to create account: ${error.message}`);
+      throw new Error(`Failed to create account: ${error.message} asdf`);
     }
   }
 
   async login({ email, password }) {
     try {
-      return await this.account.createEmailSession({ email, password });
+      return await this.account.createEmailSession(email, password);
     } catch (error) {
       throw new Error(`Failed to log in: ${error.message}`);
     }

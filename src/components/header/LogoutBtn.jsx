@@ -5,8 +5,9 @@ import { logout } from "../../store/authSlice";
 
 const LogoutBtn = () => {
   const dispatch = useDispatch();
-  const logoutHandler = () => {
-    authService.logout().then(() => {
+
+  const logoutHandler = async () => {
+    await authService.logout().then(() => {
       dispatch(logout());
     });
   };
