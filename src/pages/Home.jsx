@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import appwriteService from "../appwrite/config";
 import { Container, PostCard } from "../components";
+import { MagnifyingGlass } from "react-loader-spinner";
 
 function Home() {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     appwriteService.getPosts().then((posts) => {
       if (posts) {
         setPosts(posts.documents);
       }
     });
+    setLoading(false);
   }, []);
 
   if (posts.length === 0) {
@@ -20,7 +24,20 @@ function Home() {
           <div className="flex flex-wrap">
             <div className="p-2 w-full">
               <h1 className="text-2xl font-bold hover:text-gray-500">
-                Login to read posts
+                {loading ? (
+                  <MagnifyingGlass
+                    visible={true}
+                    height="80"
+                    width="80"
+                    ariaLabel="magnifying-glass-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="magnifying-glass-wrapper"
+                    glassColor="#c0efff"
+                    color="#e15b64"
+                  />
+                ) : (
+                  "Login to read posts"
+                )}
               </h1>
             </div>
           </div>

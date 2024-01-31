@@ -1,11 +1,13 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Input, RTE, Select } from "..";
 import appwriteService from "../../appwrite/config";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { DNA } from "react-loader-spinner";
 
 export default function PostForm({ post }) {
+  const [loading, setloading] = useState(false);
   const { register, handleSubmit, watch, setValue, control, getValues } =
     useForm({
       defaultValues: {
@@ -20,7 +22,7 @@ export default function PostForm({ post }) {
   const userData = useSelector((state) => state.auth.userData);
 
   const submit = async (data) => {
-    console.log("loading start");
+    setloading(true);
     if (post) {
       const file = data.image[0]
         ? await appwriteService.uploadFile(data.image[0])
@@ -32,34 +34,28 @@ export default function PostForm({ post }) {
 
       const dbPost = await appwriteService.updatePost(post.$id, {
         ...data,
-        featuredImage: file ? file.$id : undefined,
+        featuredImage: file ? file?.$id : undefined,
       });
 
       if (dbPost) {
-        navigate(`/post/${dbPost.$id}`);
+        navigate(`/post/${dbPost?.$id}`);
       }
     } else {
-      console.log("🚀 ~ Pic upload start:");
       const file = await appwriteService.uploadFile(data.image[0]);
-      console.log("pic upload end");
+
       if (file) {
-        const fileId = file.$id;
+        const fileId = file?.$id;
         data.featuredImage = fileId;
-        console.log("blog upload start");
         const dbPost = await appwriteService.createPost({
           ...data,
-          userId: userData.$id,
+          userId: userData?.$id,
         });
-
-        console.log("blog upload end");
-        console.log("🚀 ~ submit ~ dbPost:", dbPost);
-
         if (dbPost) {
-          navigate(`/post/${dbPost.$id}`);
+          navigate(`/post/${dbPost?.$id}`);
         }
       }
     }
-    console.log("loading end");
+    setloading(false);
   };
 
   const slugTransform = useCallback((value) => {
@@ -136,9 +132,22 @@ export default function PostForm({ post }) {
         <Button
           type="submit"
           bgColor={post ? "bg-green-500" : undefined}
-          className="w-full"
+          className="w-full flex justify-center"
         >
-          {post ? "Update" : "Submit"}
+          {loading ? (
+            <DNA
+              visible={true}
+              height="40"
+              width="40"
+              ariaLabel="dna-loading"
+              wrapperStyle={{}}
+              wrapperClass="dna-wrapper"
+            />
+          ) : post ? (
+            "Update"
+          ) : (
+            "Submit"
+          )}
         </Button>
       </div>
     </form>
